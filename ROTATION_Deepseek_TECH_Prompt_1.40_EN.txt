@@ -4,7 +4,7 @@ A prompt for generating a web page with a translator for the Oflameron text prog
 The language is primarily developed as a prompt, which can be used to generate a translator in AI.
 The Oflameron language is focused more on text obfuscation than cryptography.
 
-Oflameron Program Language ver 1.40 © by Valery Shmelev 02.2026  https://oflameron.com
+Oflameron Program Language ver 1.40 Â© by Valery Shmelev 02.2026  https://oflameron.com
 
 
 Request to Deepseek:
@@ -34,11 +34,11 @@ Field #5 (textarea, readonly): id="resultNumeric", placeholder="Result / Ciphert
 
 Buttons:
 
-id="runButton" — RUN. Runs the interpreter.
+id="runButton" â€” RUN. Runs the interpreter.
 
-id="xorButton" — XOR. Performs an XOR operation between the text from field #1 (the key as a numeric string) and the text from field #4. The result is placed in field #4 (and, accordingly, in field #5).
+id="xorButton" â€” XOR. Performs an XOR operation between the text from field #1 (the key as a numeric string) and the text from field #4. The result is placed in field #4 (and, accordingly, in field #5).
 
-id="showRotationButton" — "Show Rotation Table." Displays the current mapping of symbols to their functions in the message block.
+id="showRotationButton" â€” "Show Rotation Table." Displays the current mapping of symbols to their functions in the message block.
 
 Message block (div): id="messageDiv". Used to display the rotation table, error messages, and completion information (e.g., "Done in N steps").
 
@@ -92,21 +92,21 @@ action: function that performs the operation (for operators).
 
 The createInitialMapping() function creates an initial mapping, where:
 
-a..w — type: 'constant', value from INITIAL_CONSTANT_VALUES.
+a..w â€” type: 'constant', value from INITIAL_CONSTANT_VALUES.
 
-h, q, l, k — type: 'variable', value: 0.
+h, q, l, k â€” type: 'variable', value: 0.
 
-f — type: 'operator', arity: 2, action: 'multiply' (multiplication).
+f â€” type: 'operator', arity: 2, action: 'multiply' (multiplication).
 
-g — type: 'operator', arity: 2, action: 'add' (addition).
+g â€” type: 'operator', arity: 2, action: 'add' (addition).
 
-i — type: 'operator', arity: 2, action: 'subtract' (subtraction).
+i â€” type: 'operator', arity: 2, action: 'subtract' (subtraction).
 
-m — type: 'operator', arity: 1, action: 'print' (output).
+m â€” type: 'operator', arity: 1, action: 'print' (output).
 
-n — type: 'operator', arity: 'special', action: 'replace' (replacement, works in tandem with q).
+n â€” type: 'operator', arity: 'special', action: 'replace' (replacement, works in tandem with q).
 
-l — type: 'operator', arity: 1, action: 'read' (ASCII reading).
+l â€” type: 'operator', arity: 1, action: 'read' (ASCII reading).
 
 5. Rotation function rotateSymbols():
 Called after each operator (f,g,i,l,m,nq) has been fully executed. Cyclically shifts the functions of all symbols to the right by STP positions in the SYMBOL_ORDER list. This means that each symbol takes the description object (type, value, action) of the symbol that was STP positions to the left in SYMBOL_ORDER.
@@ -161,7 +161,7 @@ After execution: k = k + 3, then rotateSymbols().
 
 gXY (3 symbols): Addition.
 
-X, Y — as above.
+X, Y â€” as above.
 
 Calculation: h = normalize( getValue(X) + getValue(Y) ).
 
@@ -169,7 +169,7 @@ After execution: k = k + 3, then rotateSymbols().
 
 iXY (3 symbols): Subtraction.
 
-X, Y — as above.
+X, Y â€” as above.
 
 Calculation: h = normalize( Math.abs( getValue(X) - getValue(Y) ) ).
 
@@ -270,6 +270,7 @@ https://chat.deepseek.com/share/5uv6th7lkivqkx5mv6
 
 https://t.me/llmsource/429
 
+https://oflameron.myfilebase.site/
 
 
 
