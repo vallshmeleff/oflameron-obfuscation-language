@@ -1,0 +1,329 @@
+   
+
+The Oflameron text programming language is designed for obfuscation and encryption of text.
+Key features:
+- Oflameron exists in the form of two AI prompts: one for generating program code from encrypted text and one for translating the code into source text.
+- Oflameron is open for community development under the MIT License.
+
+Because Oflameron is based on AI prompts, virtually every program code generation is different, complicating its analysis.
+XOR transformation is used for cryptographic protection. A random number no shorter than the text length must be entered.
+AI prompts are provided "as is." Prompt specification versions are not final.
+(c) by Valery Shmelev https://oflameron.com
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+AI Prompt 12.02.2026:
+
+Prompt prototype version 1.50 gen 7 (with refined rotation)
+(Fully debugged in Deepseek)
+Write HTML and JavaScript code for a web page optimized for viewing on a smartphone with vertical orientation.
+Web page encoding: UTF-8
+JavaScript uses two "standardized" variables:
+
+1. SYMBOL_ORDER = ['a','b','c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n'] - a list of characters processed in the Oflameron language. How should the interpreter handle characters not in SYMBOL_ORDER? Only skip them.
+2. STP - number - rotation step. If not specified, STP = 0. The STP value is set only in the JavaScript code. In the resulting HTML code, the STP variable should be at the beginning of the JavaScript code, with a comment indicating where to change it.
+
+* The characters 's' and 'x' are processed characters of the Oflameron language, but they have not yet been assigned functions and are not included in rotation. Only 18 characters are used in the program. The characters 's' and 'x' are reserved.
+
+Interface elements:
+Heading: "Oflameron language interpreter ver 1.50 (with rotation)" <===
+
+Field #1 (textarea): "Prime number (key for XOR)"
+
+Initial value (digit string): 176684706477838432958329750074291851582748389687561895812160620129261977163358586401104946332014022802424840484736440263640058869150064213123847594034139965365510006253457917812163931669483321
+
+Signature: "Enter the key as a string of numbers."
+
+Field #2 (textarea): "Oflameron program source code." Contains all user-entered code, including unprocessed (blank) characters.
+
+Field #3 (textarea): "Oflameron program code (clear)". Program code cleared of unprocessed characters (not included in the list a, b, c, d, e, p, t, v, w, h, q, l, k, f, g, i, m, n). Changes every time changes are made to Field #2.
+
+Field #4 (textarea, readonly): "Result / Ciphertext" in text format after pressing the RUN button.
+
+Field #5 (textarea, readonly): "Result / Ciphertext" as a solid decimal character code (e.g., instead of UVW characters, the decimal code 858687) without spaces.
+
+Buttons:
+
+RUN (run the interpreter)
+
+XOR (operation with a key)
+
+"Show rotation table" (for debugging). The output format is the current value of the SYMBOL_ORDER array. For example, SYMBOL_ORDER= ['a','b','c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n']. Simply write the string in the messages div (replacing the contents of the div).
+
+Message block (div)
+
+Rotation information block: "STP (rotation step by list a, b, c, d, e, p, t, v, w, h, q, l, k, f, g, i, m, n) = 1 (change in the web page's JavaScript code)"
+
+Oflameron interpreter with rotation:
+Variables, constants, and parameters:
+h, q, l, k - numeric variables, initial value 0 for all
+
+STP = 1 (rotation constant, changeable by editing the web page's HTML code)
+
+Constants and their values: a=0, b=1, c=3, d=5, e=7, p=19, t=23, v=43, w=73
+
+// Initial character order
+Variable (array) SYMBOL_ORDER = ['a','b','c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n'];
+
+In this case, the first 9 characters (from the range 0-17) in the SYMBOL_ORDER variable are constant characters (a, b, c, d, e, p, t, v, w) 
+9-12 characters - variables (h, q, l, k) 
+13-17 characters - operators (f, g, i, m, n)
+
+Those. If we consider SYMBOL_ORDER as an array, then before the program code starts executing, each position in the array is assigned its own functionality (which is described below):
+
+SYMBOL_ORDER(0) = 'a' - constant
+SYMBOL_ORDER(1) = 'b' - constant
+SYMBOL_ORDER(2) = 'c' - constant
+SYMBOL_ORDER(3) = 'd' - constant
+SYMBOL_ORDER(4) = 'e' - constant
+SYMBOL_ORDER(5) = 'p' - constant
+SYMBOL_ORDER(6) = 't' - constant
+SYMBOL_ORDER(7) = 'v' - constant
+SYMBOL_ORDER(8) = 'w' - constant
+SYMBOL_ORDER(9) = 'h' - variable
+SYMBOL_ORDER(10) = 'q' - Variable
+SYMBOL_ORDER(11) = 'l' - Variable
+SYMBOL_ORDER(12) = 'k' - Variable
+SYMBOL_ORDER(13) = 'f' - Operator
+SYMBOL_ORDER(14) = 'g' - Operator
+SYMBOL_ORDER(15) = 'i' - Operator
+SYMBOL_ORDER(16) = 'm' - Operator
+SYMBOL_ORDER(17) = 'n' - Operator
+When rotating, the values ​​of the SYMBOL_ORDER array elements (letters) will change (shift), but the functionality is always assigned according to the element's index in the array.
+
+Symbol Rotation:
+Principle: Cyclic shift of symbol functions to the right in the list by STP positions. The shift is performed OPERATOR-BY-OPERATOR. For example, fbcgde - fbc is performed as multiplication of b by c. Only then is the rotation (shift) of the functionality performed.
+Shifting to the next functionality occurs only when executing the next statement!
+When executing program code, the shift will be performed as many times as the Interpreter encounters statements.
+The numeric values ​​of the constants always correspond to indices 0-8 in the SYMBOL_ORDER array, but the symbols themselves in these indices change during rotation.
+
+When to perform rotation: Rotation is performed after (after!) the execution of EVERY statement (f,g,i,l,m,n).
+
+That is, first execute the statement in the current functionality. Then, shift right in the program code by 2 or 3 characters (depending on the statement's length) - move to the next statement, then perform rotation (shift of functionality), define the new functionality of the statement, and begin executing that statement.
+
+Rotation mechanics (examples) for STP=1:
+
+a receives function b (value 1)
+
+b receives function c (value 3)
+
+...
+
+n receives function a (value 0)
+
+That is, If we consider SYMBOL_ORDER as an array, then after the first shift it becomes:
+
+SYMBOL_ORDER(0) = 'b' - constant
+SYMBOL_ORDER(1) = 'c' - constant
+SYMBOL_ORDER(2) = 'd' - constant
+SYMBOL_ORDER(3) = 'e' - constant
+SYMBOL_ORDER(4) = 'p' - constant
+SYMBOL_ORDER(5) = 't' - constant
+SYMBOL_ORDER(6) = 'v' - constant
+SYMBOL_ORDER(7) = 'w' - constant
+SYMBOL_ORDER(8) = 'h' - constant
+SYMBOL_ORDER(9) = 'q' - variable
+SYMBOL_ORDER(10) = 'l' - variable
+SYMBOL_ORDER(11) = 'k' - variable
+SYMBOL_ORDER(12) = 'f' - variable
+SYMBOL_ORDER(13) = 'g' - operator
+SYMBOL_ORDER(14) = 'i' - operator
+SYMBOL_ORDER(15) = 'm' - operator
+SYMBOL_ORDER(16) = 'n' - operator
+SYMBOL_ORDER(17) = 'a' - operator
+
+The shift in functionality is performed ONLY after the execution of each statement. That is, writing the code fcdgbemc... should be considered as fcd(shift)gbe(shift)mc(shift)...
+The table columns show how the contents of SYMBOL_ORDER change for each shift with STR=1
+
+Shift=1 	0 	1 	2 	 3	4 	5	 6 	7 	8 	9 	10 	11 	12 	13 	14 	15 	16 	17 
+------------------------------------------------------------------------------- Executable function -----------------------------------------------------------------------------------------------
+Constant a	a	b	c	d	e	p	t	v	w	h	q	l	k	f	g	i	m	n
+Constant b	b	c	d	e	p	t	v	w	h	q	l	k	f	g	i	m	n	a
+Constant c	c	d	e	p	t	v	w	h	q	l	k	f	g	i	m	n	a	b
+Constant d	d	e	p	t	v	w	h	q	l	k	f	g	i	m	n	a	b	c
+Constant e	e	p	t	v	w	h	q	l	k	f	g	i	m	n	a	b	c	d
+Constant p	p	t	v	w	h	q	l	k	f	g	i	m	n	a	b	c	d	e
+Constant t	t	v	w	h	q	l	k	f	g	i	m	n	a	b	c	d	e	p
+Constant v	v	w	h	q	l	k	f	g	i	m	n	a	b	c	d	e	p	t
+Constant w	w	h	q	l	k	f	g	i	m	n	a	b	c	d	e	p	t	v
+Variable h	h	q	l	k	f	g	i	m	n	a	b	c	d	e	p	t	v	w
+Variable q	q	l	k	f	g	i	m	n	a	b	c	d	e	p	t	v	w	h
+Variable l	l 	k	f	g	i	m	n	a	b	c	d	e	p	t	v	w	h	q
+Variable k	k	f	g	i	m	n	a	b	c	d	e	p	t	v	w	h	q	l
+Operator f	f 	f	g	i	m	n	a	b	c	d	e	p	t	v	w	h	q	l
+Operator g	g	g	i	m	n	a	b	c	d	e	p	t	v	w	h	q	l	k
+Operator i	i	i	m	n	a	b	c	d	e	p	t	v	w	h	q	l	k	f
+Operator m	m	m	n	a	b	c	d	e	p	t	v	w	h	q	l	k	f	g
+Operator n	n	n	a	b	c	d	e	p	t	v	w	h	q	l	k	f	g	i
+
+
+Errors: If after rotation, an operator receives an inappropriate arity, the operation is skipped.
+For example:
+1. If the operator f expects two parameters, and after rotation it becomes l (one parameter), then only one (the first parameter) is used, and the second parameter, remaining from f, is skipped, since it is redundant (incorrect) for l. Since the new operator l is now executed, then k+2. However, there is still one parameter from f left; it will be considered an error and should be skipped. We should treat this symbol as an error (k+1) and move on.
+2. If the operator l (one parameter) becomes f (two parameters), and the code after it contains only one symbol, then the resulting operator f has an invalid format (another parameter is missing) and should simply be skipped.
+
+Period: With STP=1, the rotation period = 18 operators
+
+Number normalization:
+javascript
+function normalize(num) {
+while (num > 126) num -= 126;
+if (num < 0) num = Math.abs(num);
+return Math.floor(num);
+}
+Applied to the result after EVERY mathematical operation. The result must be positive and in the range 0-126.
+
+Valid operands:
+Constants: a, b, c, d, e, p, t, v, w
+
+Variables: h, q, l
+
+k is used ONLY as a position indicator in a program line of code.
+
+Operators (before rotation):
+fXY - multiplication: h = normalize(X * Y) (k+3) - operator size = 3 characters
+
+gXY - addition: h = normalize(X + Y) (k+3) - operator size = 3 characters
+
+iXY - subtraction: h = normalize(Math.abs(X - Y)) (k+3) - operator size = 3 characters
+
+lX - read the ASCII code of the character at position k + normalize(X) (k+2) into l - operator size = 2 characters. A specific character (literal character, letter) is read from a string "cleaned" of program symbols (i.e., constants, variables, operators). The character read from the specified position in the code string is the same as the one present at the time the lX operator is executed. We read the ASCII code of the character (letter).
+If the index is out of range, then only an error occurs (skipping the operator, k + 2). In this case, the variable l retains its previous value.
+
+mX - output the character with the normalize(X) code in field #4 (k + 2) - operator size = 2 characters. The output is cumulative, meaning each mX adds a character to the result string. Non-printable characters are replaced with a space. The range of "printable" characters is 32-126.
+
+nX - replace the character at position k + normalize(X) with the character with the normalize(h) code (k + 2) - operator size = 2 characters. The character is replaced in the "cleaned" program code. If, after replacement, a character not in SYMBOL_ORDER (for example, a digit) is found, this situation is treated as an error and skipped. We replace the character with an ASCII character with this code. If this leads to an error in the execution of further code, we will then handle the error. The user can intentionally create an error in the program. Operator nX - if the index is out of range, then an error (skip), k + 2. In the operator, nX is (X is the operator parameter), for example, na, ne, or nk. If X is not a constant or variable, then this is an operator format error and also k + 2, but we do nothing.
+If, as a result of writing a character into the program code, it turns out that it is not in the SYMBOL_ORDER list, then this character is skipped as a "ballast".
+If for the operator nX the index is out of range, then nothing is done and k is still + 2 (this is the only case where, by error, k is still + 2). That is, We simply skip the nX operator
+The operator is called nX (where X is any valid operand/parameter: constant/variable)
+
+
+General rules:
+Execution is strictly left-to-right.
+
+k (the pointer in the program line) is only incremented.
+
+Code movement:
+
+f,g,i: k+3
+
+l,m,n: k+2 (where l is the lX operator with the operand X, m is the mX operator with the operand X, n is the nX operator with the operand X)
+
+Error/unknown symbol: k+1 (simply move right one position in the program line)
+
+Error: if an operand is expected, but the symbol is invalid > k+1
+
+Unknown symbols: skipped (k+1)
+
+Program code self-modification: via the nX operator
+
+Reset on RUN: zero out h,q,l,k, clear fields #4 and #5, reset rotation to the beginning. Fields #2 and #3 remain unchanged (the same as entered by the user). Decoding continues using the program from field #3 (cleared). If the user changes field #2 after RUN but doesn't press RUN again, field #3 will automatically update (using the input listener) and overwrite the program code.
+
+Program loop protection: maximum 100,000 steps. 100,000 steps is the limit on the number of operations performed. An operation is a successfully executed statement (f,g,i,l,m,n).
+
+Rotation mechanics in detail:
+Initial state: symbols have their original functions
+
+After each operator:
+
+All symbols are shifted to the right by the STP positions in the list
+
+New functions are applied to the next operator
+
+Example with STP=1:
+
+text
+Initial: a=0, b=1, c=3, d=5, ..., f=multiplication, g=addition
+After the first operator: a=1, b=3, c=5, ..., f=addition, g=subtraction
+
+XOR operation:
+Performed: between the key (field #1) and the text (field #4)
+
+Process:
+
+Take N = min(key_length, text_length)
+
+For i=0..N-1: result[i] = String.fromCharCode(key_code[i] ^ text_code[i])
+
+Replace the contents of field #4 to the result
+
+Reversibility: XOR(XOR(text, key), key) = text
+
+Show Rotation Table function:
+Shows the current rotation state. The output format is the current value of the SYMBOL_ORDER array. For example: SYMBOL_ORDER= ['a','b','c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n']
+
+
+Examples of execution with rotation of functionality:
+
+Example 1 (STP=1):
+
+Source code: fbcgde...
+Step 1: fbc is executed as a multiplication (b*c = 1*3 = 3, h=3)
+Step 2: Rotation: the functionality of the symbols is shifted to the right by 1
+That is, Instead of SYMBOL_ORDER = ['a','b','c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n']
+consider SYMBOL_ORDER = ['b','c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n','a'];
+Step 3: g, where g is now performed as subtraction (g is given the function i). The operator length is 3 characters.
+Step 4: Calculation: |d - e| = |5 - 7| = 2, h=2
+Step 5: Rotation: again, the symbol functionality is shifted to the right by 1
+And instead of SYMBOL_ORDER = ['b','c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n','a']
+we should consider SYMBOL_ORDER = ['c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n','a','b'];
+
+Example 2 (STP=2):
+
+Source code: fbcfbc...
+Step 1: fbc is performed as a multiplication (1*3=3, h=3)
+Step 2: Rotation: shift functionality by 2 positions
+I.e. Instead of SYMBOL_ORDER = ['a','b','c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n']
+we should consider SYMBOL_ORDER = ['c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n','a','b']
+Step 3: Now: f -> i (subtraction). Next, we look at the parameters for subtraction. The format is iXY. Length is 3 characters.
+The symbol b is no longer a constant, but functions as the n operator—the code editing operator. In the f format, another operator cannot be a parameter. Error. Skipping k+3
+
+Implementation Requirements:
+Pure HTML/CSS/JavaScript, no external libraries
+
+Responsive layout for mobile devices
+
+RUN button: Runs the interpreter with the code from field #2, resetting the rotation
+
+XOR button: Performs the XOR operation as described above
+
+Show Rotation Table button: Shows the current state
+
+Rotation Implementation:
+
+Array of functions for each symbol
+
+The rotateSymbols() function is called after each operator
+
+The conversion table is updated dynamically
+
+Messages: Display rotation information in a separate div.
+
+Technical details of rotation implementation:
+How to implement: Using currentSymbolOrder (array) + fixed types by index
+
+javascript
+// Initial symbol order
+Variable SYMBOL_ORDER = ['a','b','c','d','e','p','t','v','w','h','q','l','k','f','g','i','m','n'];
+
+// Current mapping of symbols to functions
+
+// Rotation function
+function rotateSymbols() {
+const newMapping = {};
+for(let i = 0; i < SYMBOL_ORDER.length; i++) {
+const fromSymbol = SYMBOL_ORDER[i];
+// Shift right by STP
+const toIndex = (i - STP + SYMBOL_ORDER.length) % SYMBOL_ORDER.length;
+const toSymbol = SYMBOL_ORDER[toIndex];
+newMapping[fromSymbol] = symbolMapping[toSymbol];
+}
+symbolMapping = newMapping;
+}
+
+Online Processing https://chat.deepseek.com/share/p3uvf82pb3wunr8uol
+
+https://t.me/llmsource/
+
+Promising features: variable rotation functionality and dynamic SYMBOL_ORDER array
+
